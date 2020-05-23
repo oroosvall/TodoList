@@ -23,6 +23,17 @@ namespace TodoList
 
         public void taskChanged(object sender, PropertyChangedEventArgs e)
         {
+            Task t = (Task)sender;
+            int idx = tasks.IndexOf(t);
+            if(t.Done)
+            {
+                tasks.Move(idx, tasks.Count - 1);
+            }
+            else
+            {
+                tasks.Move(idx, 0);
+            }
+
             OnPropertyChanged("TasksCompleted");
             OnPropertyChanged("ProjectCompletion");
         }
@@ -82,7 +93,8 @@ namespace TodoList
                 }
                 else
                 {
-                    return 0;
+                    complete = 1;
+                    return 100;
                 }
             }
             set { }

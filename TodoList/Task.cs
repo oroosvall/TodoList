@@ -25,10 +25,10 @@ namespace TodoList
         int timeTaken;
         bool done;
 
-        public string TaskName { get => taskName; set => taskName = value; }
-        public int EstTime { get => estTime; set => estTime = value; }
-        public int TimeTaken { get => timeTaken; set => timeTaken = value; }
-        public string TaskDetails { get => taskDetails; set => taskDetails = value; }
+        public string TaskName { get => taskName; set { taskName = value; OnPropertyChanged("TaskName"); } }
+        public int EstTime { get => estTime; set { estTime = value; OnPropertyChanged("EstTime"); } }
+        public int TimeTaken { get => timeTaken; set { timeTaken = value; OnPropertyChanged("TimeTaken"); } }
+        public string TaskDetails { get => taskDetails; set { taskDetails = value; OnPropertyChanged("TaskDetails"); } }
         public bool Done { get => done;
             set { done = value; OnPropertyChanged("Done"); }
         }

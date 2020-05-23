@@ -8,8 +8,8 @@
     <UserControl.DataContext>
         <local:Task/>
     </UserControl.DataContext>
-    <Grid Background="#FFD1D1D1" Height="383" Width="279">
-        <Label Content="Task Name:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="91"/>
+    <Grid Background="#FF6C6C6C" Height="383" Width="279">
+        <Label Content="SubTask Name:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="91"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="126,14,0,0" TextWrapping="Wrap" Text="{Binding TaskName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
         <Label Content="Estimated Time" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="126,45,0,0" TextWrapping="Wrap" Text="{Binding EstTime, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120" PreviewTextInput="TextBox_PreviewTextInput"/>
@@ -18,7 +18,7 @@
         <Label Content="Task Complete" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top"/>
         <CheckBox Content="" HorizontalAlignment="Left" Margin="126,110,0,0" VerticalAlignment="Top" Width="120" IsChecked="{Binding Done}"/>
         <Label Content="Details" HorizontalAlignment="Left" Margin="10,138,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Height="209" Margin="10,164,0,0" TextWrapping="Wrap" Text="{Binding TaskDetails, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="259" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" AcceptsTab="True"/>
+        <TextBox HorizontalAlignment="Left" Height="209" Margin="10,164,0,0" TextWrapping="Wrap" Text="{Binding TaskDetails, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="259" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" AcceptsTab="True" BorderBrush="#FF353638" Background="Black"/>
 
     </Grid>
 </UserControl>

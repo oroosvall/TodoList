@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace TodoList
 {
@@ -90,7 +80,10 @@ namespace TodoList
                     double completed = getCompletedTasks();
                     double total = getTotalTasks();
                     double per = (completed / total) * 100.0;
-                    return completed + "/" + total + " " + per.ToString("0.##") + "%"; }
+                    if (double.IsNaN(per))
+                        per = 100.0;
+                    return completed + "/" + total + " " + per.ToString("0.##") + "%";
+                }
                 set { }
             }
 
@@ -131,30 +124,43 @@ namespace TodoList
                 }
             }
 
+            public void savePath(string path)
+            {
+                IFormatter formatter = new BinaryFormatter();
+                Stream outStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+
+                formatter.Serialize(outStream, this);
+                outStream.Close();
+            }
+
         }
         
         ProjectHolder ph;
-
+        String lastFile;
         public MainWindow()
         {
-            IFormatter formatter = new BinaryFormatter();
-            
             string filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/TodoList/";
             Directory.CreateDirectory(filePath);
             InitializeComponent();
 
-            ph = new ProjectHolder();
-
+            IFormatter formatter = new BinaryFormatter();
             try
             {
                 Stream inStream = new FileStream(filePath + "todo.info", FileMode.Open, FileAccess.Read);
-                ph = (ProjectHolder)formatter.Deserialize(inStream);
+                lastFile = (String)formatter.Deserialize(inStream);
             }
             catch (Exception) { }
 
-            DataContext = ph;
-            projList.DataContext = ph;
-            ph.UpdatePropertyHandlers();
+            if (!String.IsNullOrEmpty(lastFile))
+            {
+                openFile(lastFile);
+            }
+            else
+            {
+                ph = new ProjectHolder();
+                projList.DataContext = ph;
+                ph.UpdatePropertyHandlers();
+            }
         }
         
         private void AddProject(object sender, RoutedEventArgs e)
@@ -168,6 +174,7 @@ namespace TodoList
                 projName.Text = "";
                 ph.Projects.Add(p);
                 projList.SelectedValue = p;
+                ph.ItemChanged(null, null);
             }
         }
         
@@ -177,7 +184,7 @@ namespace TodoList
             if(p != null)
             {
                 Task t = new Task();
-                p.Tasks.Add(t);
+                p.Tasks.Insert(0, t);
                 taskList.SelectedValue = t;
             }
         }
@@ -204,14 +211,22 @@ namespace TodoList
             }
         }
 
-        private void SaveProjects(object sender, RoutedEventArgs e)
+        private void openFile(string file)
         {
             IFormatter formatter = new BinaryFormatter();
-            string filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/TodoList/";
-            Stream outStream = new FileStream(filePath + "todo.info", FileMode.Create, FileAccess.Write);
+            ph = new ProjectHolder();
 
-            formatter.Serialize(outStream, ph);
-            outStream.Close();
+            try
+            {
+                Stream inStream = new FileStream(file, FileMode.Open, FileAccess.Read);
+                ph = (ProjectHolder)formatter.Deserialize(inStream);
+                inStream.Close();
+            }
+            catch (Exception) { }
+
+            DataContext = ph;
+            projList.DataContext = ph;
+            ph.UpdatePropertyHandlers();
         }
 
         private void UpdateProjectName(object sender, RoutedEventArgs e)
@@ -270,6 +285,50 @@ namespace TodoList
             {
                 ph.Projects.Move(projList.SelectedIndex, projList.SelectedIndex + 1);
             }
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            string filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/TodoList/";
+            IFormatter formatter = new BinaryFormatter();
+            Stream outStream = new FileStream(filePath + "todo.info", FileMode.Create, FileAccess.Write);
+
+            formatter.Serialize(outStream, lastFile);
+            outStream.Close();
+
+            ph.savePath(lastFile);
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog diag = new SaveFileDialog();
+            diag.DefaultExt = ".todo";
+            diag.AddExtension = true;
+            diag.Filter = "todolist files | *.todo";
+            if (diag.ShowDialog().GetValueOrDefault())
+            {
+                ph.savePath(diag.FileName);
+            }
+        }
+
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog diag = new OpenFileDialog();
+            diag.DefaultExt = ".todo";
+            diag.AddExtension = true;
+            diag.Filter = "todolist files | *.todo";
+            if (diag.ShowDialog().GetValueOrDefault())
+            {
+                lastFile = diag.FileName;
+                openFile(diag.FileName);
+            }
+        }
+
+        private void MenuItem_Click_2(object sender, RoutedEventArgs e)
+        {
+            ph = new ProjectHolder();
+            projList.DataContext = ph;
+            ph.UpdatePropertyHandlers();
         }
     }
 }

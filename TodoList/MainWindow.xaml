@@ -5,52 +5,76 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TodoList"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800" ResizeMode="NoResize">
-    <Grid Width="800" Height="480">
-        <local:TaskInfo x:Name="tksInfo" HorizontalAlignment="Left" Height="392" Margin="503,10,0,0" VerticalAlignment="Top" Width="287" DataContext="{Binding SelectedValue, ElementName=taskList}"/>
-        <ListView x:Name="taskList" HorizontalAlignment="Left" Height="279" Margin="234,10,0,0" VerticalAlignment="Top" Width="264" ItemsSource="{Binding Tasks}" DataContext="{Binding SelectedValue, ElementName=projList}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Task Name" DisplayMemberBinding="{Binding TaskName}" Width="160"/>
-                    <GridViewColumn Header="Completed">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <CheckBox IsChecked="{Binding Done}" IsEnabled="False"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <ListView x:Name="projList" HorizontalAlignment="Left" Height="279" Margin="10,10,0,0" VerticalAlignment="Top" Width="195" ItemsSource="{Binding Projects, UpdateSourceTrigger=PropertyChanged}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Project Name" DisplayMemberBinding="{Binding ProjectName}"/>
-                    <GridViewColumn Header="Completed">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding ProjectCompletion}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <Button Content="Add" HorizontalAlignment="Left" Height="22" Margin="123,353,0,0" VerticalAlignment="Top" Width="82" Click="AddProject"/>
-        <TextBox x:Name="projName" HorizontalAlignment="Left" Height="22" Margin="10,353,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="108"/>
-        <Label Content="Project Name" HorizontalAlignment="Left" Margin="10,322,0,0" VerticalAlignment="Top" Width="89"/>
-        <Button Content="Add" HorizontalAlignment="Left" Height="22" Margin="416,353,0,0" VerticalAlignment="Top" Width="82" Click="AddTask"/>
-        <Button Content="Remove" HorizontalAlignment="Left" Height="22" Margin="123,380,0,0" VerticalAlignment="Top" Width="82" Click="RemoveProject"/>
-        <Button Content="Remove" HorizontalAlignment="Left" Height="22" Margin="416,380,0,0" VerticalAlignment="Top" Width="82" Click="RemoveTask"/>
-        <Button Content="Save" HorizontalAlignment="Left" Margin="10,419,0,0" VerticalAlignment="Top" Width="75" Click="SaveProjects"/>
-        <Button Content="Update Name" HorizontalAlignment="Left" Height="22" Margin="123,407,0,0" VerticalAlignment="Top" Width="82" Click="UpdateProjectName"/>
-        <ProgressBar HorizontalAlignment="Left" Height="16" Margin="10,301,0,0" VerticalAlignment="Top" Width="195" Value="{Binding ProjectsComplete}"/>
-        <ProgressBar HorizontalAlignment="Left" Height="16" Margin="234,301,0,0" VerticalAlignment="Top" Width="264" Value="{Binding SelectedValue.TasksCompleted, ElementName=projList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-        <Label Content="TaskStatus" HorizontalAlignment="Left" Margin="234,322,0,0" VerticalAlignment="Top" Width="110"/>
-        <Label Content="{Binding TaskStatus}" HorizontalAlignment="Left" Margin="253,353,0,0" VerticalAlignment="Top" Width="110"/>
-        <Button x:Name="taskdown" Content="˅" HorizontalAlignment="Left" Margin="474,328,0,0" VerticalAlignment="Top" Width="24" Click="Taskdown_Click"/>
-        <Button x:Name="taskup" Content="˄" HorizontalAlignment="Left" Margin="445,328,0,0" VerticalAlignment="Top" Width="24" Click="Taskup_Click"/>
-        <Button x:Name="projdown" Content="˅" HorizontalAlignment="Left" Margin="181,325,0,0" VerticalAlignment="Top" Width="24" Click="Projdown_Click"/>
-        <Button x:Name="projup" Content="˄" HorizontalAlignment="Left" Margin="152,325,0,0" VerticalAlignment="Top" Width="24" Click="Projup_Click"/>
-    </Grid>
+        Title="MainWindow" Height="700" Width="1000" ResizeMode="NoResize" Closing="Window_Closing">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" Click="MenuItem_Click_2" />
+                <MenuItem Header="_Open" Click="MenuItem_Click_1" />
+                <MenuItem Header="_Save" Click="MenuItem_Click" />
+                <Separator />
+                <MenuItem Header="_Exit" />
+            </MenuItem>
+        </Menu>
+        <Grid Width="1000" Height="700" Background="#FF6C6C6C">
+            <local:TaskInfo x:Name="tksInfo" HorizontalAlignment="Left" Height="392" Margin="703,10,0,0" VerticalAlignment="Top" Width="287" DataContext="{Binding SelectedValue, ElementName=taskList}"/>
+            <ListView x:Name="taskList" HorizontalAlignment="Left" Height="392" Margin="350,10,0,0" VerticalAlignment="Top" Width="348" ItemsSource="{Binding Tasks}" DataContext="{Binding SelectedValue, ElementName=projList}">
+                <ListView.View>
+                    <GridView>
+                        <GridView.ColumnHeaderContainerStyle>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="Background" Value="Gray"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="BorderBrush" Value="DarkGray"/>
+                            </Style>
+                        </GridView.ColumnHeaderContainerStyle>
+                        <GridViewColumn Header="SubTask Name" DisplayMemberBinding="{Binding TaskName}" Width="160"/>
+                        <GridViewColumn Header="Completed">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding Done}" IsEnabled="False"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <ListView x:Name="projList" HorizontalAlignment="Left" Height="392" Margin="10,10,0,0" VerticalAlignment="Top" Width="305" ItemsSource="{Binding Projects, UpdateSourceTrigger=PropertyChanged}">
+                <ListView.View>
+                    <GridView>
+                        <GridView.ColumnHeaderContainerStyle>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="Background" Value="Gray"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="BorderBrush" Value="DarkGray"/>
+                            </Style>
+                        </GridView.ColumnHeaderContainerStyle>
+                        <GridViewColumn Header="Task Name" DisplayMemberBinding="{Binding ProjectName}"/>
+                        <GridViewColumn Header="Completed">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ProjectCompletion}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Button Content="Add" HorizontalAlignment="Left" Height="22" Margin="233,467,0,0" VerticalAlignment="Top" Width="82" Click="AddProject"/>
+            <TextBox x:Name="projName" HorizontalAlignment="Left" Height="22" Margin="10,467,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="218"/>
+            <Label Content="Task Name" HorizontalAlignment="Left" Margin="10,436,0,0" VerticalAlignment="Top" Width="89"/>
+            <Button Content="Add" HorizontalAlignment="Left" Height="22" Margin="608,464,0,0" VerticalAlignment="Top" Width="82" Click="AddTask"/>
+            <Button Content="Remove" HorizontalAlignment="Left" Height="22" Margin="233,494,0,0" VerticalAlignment="Top" Width="82" Click="RemoveProject"/>
+            <Button Content="Remove" HorizontalAlignment="Left" Height="22" Margin="608,491,0,0" VerticalAlignment="Top" Width="82" Click="RemoveTask"/>
+            <Button Content="Update Name" HorizontalAlignment="Left" Height="22" Margin="233,521,0,0" VerticalAlignment="Top" Width="82" Click="UpdateProjectName"/>
+            <ProgressBar HorizontalAlignment="Left" Height="16" Margin="10,415,0,0" VerticalAlignment="Top" Width="305" Value="{Binding ProjectsComplete}"/>
+            <ProgressBar HorizontalAlignment="Left" Height="16" Margin="350,415,0,0" VerticalAlignment="Top" Width="340" Value="{Binding SelectedValue.TasksCompleted, ElementName=projList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Label Content="TaskStatus" HorizontalAlignment="Left" Margin="350,439,0,0" VerticalAlignment="Top" Width="110"/>
+            <Label Content="{Binding TaskStatus}" HorizontalAlignment="Left" Margin="374,467,0,0" VerticalAlignment="Top" Width="110"/>
+            <Button x:Name="taskdown" Content="˅" HorizontalAlignment="Left" Margin="666,439,0,0" VerticalAlignment="Top" Width="24" Click="Taskdown_Click"/>
+            <Button x:Name="taskup" Content="˄" HorizontalAlignment="Left" Margin="637,439,0,0" VerticalAlignment="Top" Width="24" Click="Taskup_Click"/>
+            <Button x:Name="projdown" Content="˅" HorizontalAlignment="Left" Margin="291,439,0,0" VerticalAlignment="Top" Width="24" Click="Projdown_Click"/>
+            <Button x:Name="projup" Content="˄" HorizontalAlignment="Left" Margin="262,439,0,0" VerticalAlignment="Top" Width="24" Click="Projup_Click"/>
+        </Grid>
+    </DockPanel>
 </Window>
