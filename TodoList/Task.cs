@@ -40,7 +40,10 @@ namespace TodoList
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
             {
-                handler(this, new PropertyChangedEventArgs(name));
+                if (name == "Done")
+                {
+                    handler(this, new PropertyChangedEventArgs(name));
+                }
             }
         }
 
